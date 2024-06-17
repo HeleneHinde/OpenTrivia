@@ -1,20 +1,60 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Ionic
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <h1 class="title">{{ title }}</h1>
+  <h2>L'interpolation</h2>
+  <p>L'interpolation c'est l'interprétation d'une varibale ou d'une expression dans le HTML</p>
+  <p>10 + 20 = {{ 10 + 20 }}</p>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <h2>La liaison par évènement ou Event Binding</h2>
+  <button (click)="doSomething()">Appuie</button>
+  <p>La liaison par évènement permet d'appeler des méthodes TS à partir de l'html</p>
+
+  <h2>La liaison par propriété ou Property Binding</h2>
+
+  <div [style.fontSize]="sizeText + 'px'">
+    Ceci est un text en html ou la taille varie en fonction de la propriété sizeText
+  </div>
+
+  <img [src]="srcImg" [alt]="altImg">
+
+  <p>La liaison par propriété permet de lier une propriété html ou CSS à une variable ou une expression TS</p>
+
+  <h2>La liaison à double sens ou Two Ways Binding</h2>
+  <label for="sizeText">Taille du texte : </label>
+  <input type="number" [(ngModel)]="sizeText">
+  <p>La liaison à double sens se fait grâce à la directive ngModel, celle-ci doit être importée dans le tableau des imports du composant à partir de 'FormsModule'</p>
+  <p>Cette liaison permet de faire le lien entre la valeaur d'un input et une variable TS</p>
+
+  <h2>Les directives structurelles</h2>
+  <div *ngIf="isHidden">
+    Ce texte peut-être acché ou afficher
+  </div>
+  <button (click)="changeVisibility()">Cacher/Afficher le texte</button>
+
+  <div *ngIf="listFruits.length > 0">
+    <ul>
+      <li *ngFor="let fruit of listFruits">
+          {{ fruit }}
+      </li>
+    </ul>
+  </div>
+
+  <p>
+    La directive ngIf permet d'afficher une balise et son contenu en fonction d'une condition
+  </p>
+  <p>La directive ngFor permet d'afficher en boucle une balise et son contenu en fonction d'un tableau dans le TS</p>
+  <p>C'est directives nécéssite l'import de CommonModule</p>
+
+  <h2>Les autres directives</h2>
+  <div [ngClass]="{'class1': classText > 0, 'class2': classText < 0 }">
+    <label for="classText">Choici la class css</label>
+      <input type="number" [(ngModel)]="classText">
   </div>
 </ion-content>

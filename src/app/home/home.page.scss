@@ -1,27 +1,16 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.title{
+  color: blue;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.class1{
+  color: red;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+.class2{
+  color: green;
 }
 
-#container a {
-  text-decoration: none;
+img{
+  height: 50px;
+  width: auto;
 }
