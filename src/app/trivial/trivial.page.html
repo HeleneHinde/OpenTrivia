@@ -1,13 +1,51 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>trivial</ion-title>
+    <ion-title>Open Trivia</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">trivial</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div *ngIf="!gameStarted">
+    <form #triviaForm="ngForm" class="form-container">
+      <div class="form-item">
+        <label for="pseudo">Votre Pseudo :</label>
+        <input type="text" [(ngModel)]="pseudo" name="pseudo" required minlength="3">
+
+        <div *ngIf="pseudoInvalid()">
+          <div color="danger">
+            <p>Le pseudo doit faire au moins 3 caractères.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-item">
+        <label for="">Difficulté :</label>
+        <select [(ngModel)]="selectedDifficulty" name="difficulty">
+          <option *ngFor="let difficulty of difficulties" [value]="difficulty"> {{ difficulty }}</option>
+        </select>
+      </div>
+      <div>
+        <label for="">Sauvergarder mes informations</label>
+        <input type="checkbox" [(ngModel)]="saveInfo" name="saveInfo">
+      </div>
+      <div class="form-item">
+        <button (click)="startGame()" [disabled]="triviaForm.invalid">Commencer</button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="gameStarted">
+    <p>Jeu démarré avec le pseudonyme: {{ pseudo }} et le niveau de difficulté: {{ selectedDifficulty }}</p>
+  </div>
+
+  <div *ngIf="gameStarted">
+    <h2>Quel est la couleur du cheval blanc d'Henry 4</h2>
+    <div class="button-container">
+      <button (click)="answerIt()">Bleu</button>
+      <button (click)="answerIt()">Blanc</button>
+      <button (click)="answerIt()">Rouge</button>
+      <button (click)="answerIt()">NSP</button>
+      <button *ngIf="answer">Question suivante</button>
+    </div>
+  </div>
+
 </ion-content>
