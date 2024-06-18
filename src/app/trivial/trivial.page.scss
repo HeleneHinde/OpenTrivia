@@ -15,3 +15,15 @@
     flex-direction: column;
     width: 200px;
 }
+
+.class1{
+    --background: gray;
+}
+
+.class2 {
+    --background: var(--ion-color-success);
+}
+
+.class3{
+    --background: red;
+}

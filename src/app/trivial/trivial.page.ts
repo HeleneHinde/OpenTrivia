@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Form, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import {IonicModule, ToastController} from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { OpenTriviaService } from '../services/open-trivia.service';
+import { Question } from '../models/question';
 
 @Component({
   selector: 'app-trivial',
@@ -20,8 +21,11 @@ export class TrivialPage implements OnInit {
   gameStarted: boolean = false;
   answer: boolean = false;
   isToast: boolean = false;
-  question: any[] = [];
+  question: Question[] = [];
   number: number = 0;
+  rejouer: boolean = false;
+  score: number = 0;
+  classText: boolean = false;
 
   constructor(private openTriviaService: OpenTriviaService, private toastCtrl: ToastController) { }
 
@@ -29,16 +33,16 @@ export class TrivialPage implements OnInit {
 
   pseudoInvalid() {
 
-    if(this.pseudo.length > 0 && this.pseudo.length < 3)
-      this.isToast=true;
+    if (this.pseudo.length > 0 && this.pseudo.length < 3)
+      this.isToast = true;
     else
-    this.isToast=false;
+      this.isToast = false;
   }
 
   async startGame() {
     if (this.pseudo.length >= 3) {
       this.gameStarted = true;
-      this.isToast=false;
+      this.isToast = false;
       // Logique supplémentaire pour sauvegarder les informations si nécessaire
       if (this.saveInfo) {
         localStorage.setItem('pseudo', this.pseudo);
@@ -53,30 +57,58 @@ export class TrivialPage implements OnInit {
       }
 
     } else {
-      this.isToast=true;
+      this.isToast = true;
+    }
+  }
+
+  async restartGame() {
+    this.number=0;
+    this.score=0;
+    this.classText=false;
+    this.answer = false;
+    this.rejouer = false;
+
+    try {
+      this.question = await this.openTriviaService.getQuestions(this.selectedDifficulty);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des questions :', error);
+      // Gérer l'erreur, par exemple afficher un message à l'utilisateur
     }
   }
 
   async answerIt(isCorrect: boolean) {
-    if(isCorrect){
-      this.answer = true;
+    this.classText = true;
+
+    if (isCorrect) {
+      this.score++
     } else {
       const toast = this.toastCtrl.create({
-        message: "tu t'es trompé, essaie encore !",
+        message: "tu t'es trompé !",
         duration: 3500,
         position: 'middle'
       });
       (await toast).present();
     }
 
-    
+    if (this.number < (this.question.length - 1)) {
+      this.answer = true;
+    } else {
+      const toast = this.toastCtrl.create({
+        message: "ton score est de " + this.score,
+        duration: 3500,
+        position: 'middle'
+      });
+      (await toast).present();
+
+      this.rejouer = true;
+    }
+
+
   }
 
-  nextQuestion(){
+  nextQuestion() {
     this.number++
     this.answer = false;
-
-    if(this.number >= this.question.length)
-      this.number=0;
+    this.classText = false;
   }
 }

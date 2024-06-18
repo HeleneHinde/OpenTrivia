@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Question } from '../models/question';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ export class OpenTriviaService {
 
   constructor() { }
 
-  getQuestions(difficulty: string): Promise<Array<any>> {
+  getQuestions(difficulty: string): Promise<Array<Question>> {
 
 
     return new Promise((resolve, reject) => {
@@ -15,57 +16,51 @@ export class OpenTriviaService {
       setTimeout(function () {
 
         switch (difficulty) {
-          case "easy": resolve([{
-            category: "Japanese Anime & Manga",
-            type: "multiple",
-            difficulty: "easy",
-            question: "In 'Fairy Tail', what is the nickname of Natsu Dragneel?",
-            correct_answer: "The Salamander",
-            incorrect_answers: ["The Dragon Slayer", "The Dragon", "The Demon"]
-           },
-           {
-            category: "Video Games",
-            type: "boolean",
-            difficulty: "easy",
-            question: "'Return to Castle Wolfenstein' was the only game of the Wolfenstein series where you don't play as William.J.Blazkowicz",
-            correct_answer: "False",
-            incorrect_answers: ["True"]
-           }
-         ]);
+          case "easy": resolve([new Question("Japanese Anime & Manga",
+            "multiple",
+            "easy",
+            "In 'Fairy Tail', what is the nickname of Natsu Dragneel?",
+            "The Salamander",
+            ["The Dragon Slayer", "The Dragon", "The Demon"]
+          ),
+          new Question("Video Games",
+            "boolean",
+            "easy",
+            "'Return to Castle Wolfenstein' was the only game of the Wolfenstein series where you don't play as William.J.Blazkowicz",
+            "False",
+            ["True"]
+          )
+          ]);
             break;
-          case "medium": resolve([{
-            category: "Science",
-            type: "multiple",
-            difficulty: "medium",
-            question: " Comment s'appelle le premier homme à avoir marché sur la lune ?",
-            correct_answer: "Lance Amstrong",
-            incorrect_answers: ["Buzz Aldrin", "Youri Gagarine", "Thomas Pesquet"]
-           },
-           {
-            category: "Science",
-            type: "boolean",
-            difficulty: "medium",
-            question: "Est-ce que la terre est ronde",
-            correct_answer: "Vrai",
-            incorrect_answers: ["Faux"]
-           }]);
+          case "medium": resolve([new Question("Science",
+            "multiple",
+            "medium",
+            " Comment s'appelle le premier homme à avoir marché sur la lune ?",
+            "Lance Amstrong",
+            ["Buzz Aldrin", "Youri Gagarine", "Thomas Pesquet"]
+          ),
+          new Question("Science",
+            "boolean",
+            "medium",
+            "Est-ce que la terre est ronde",
+            "Vrai",
+            ["Faux"]
+          )]);
             break;
-          case "hard": resolve([{
-            category: "Histoire",
-            type: "multiple",
-            difficulty: "hard",
-            question: "Comment s'appelle le roi soleil ?",
-            correct_answer: "Louis XIV",
-            incorrect_answers: ["Henry IV", "Louis XVI", "Charles III"]
-           },
-           {
-            category: "Video Games",
-            type: "multiple",
-            difficulty: "medium",
-            question: "Quel saga racontes les aventures de link ?",
-            correct_answer: "Zelda",
-            incorrect_answers: ["Elden Ring", "Mario", "Mass Effect"]
-           }]);
+          case "hard": resolve([new Question(
+            "Histoire",
+            "multiple",
+            "hard",
+            "Comment s'appelle le roi soleil ?",
+            "Louis XIV",
+            ["Henry IV", "Louis XVI", "Charles III"]),
+          new Question("Video Games",
+            "multiple",
+            "medium",
+            "Quel saga racontes les aventures de link ?",
+            "Zelda",
+            ["Elden Ring", "Mario", "Mass Effect"]
+          )]);
             break;
         }
 

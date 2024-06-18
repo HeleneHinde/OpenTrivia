@@ -11,7 +11,8 @@
         <ion-label for="pseudo">Votre Pseudo :</ion-label>
         <ion-input type="text" [(ngModel)]="pseudo" name="pseudo" required />
 
-        <ion-toast [isOpen]="isToast" message="Le pseudo doit faire au moins 3 caractères." [duration]="5000"></ion-toast>
+        <ion-toast [isOpen]="isToast" message="Le pseudo doit faire au moins 3 caractères."
+          [duration]="5000"></ion-toast>
 
       </div>
       <div class="form-item">
@@ -35,12 +36,20 @@
   </div>
 
   <div *ngIf="question && question.length > 0">
-    <h2>{{ question[number]?.question }}</h2>
+    <h2>{{ question[number].question }}</h2>
     <div class="button-container">
-      <ion-button (click)="answerIt(true)">{{ question[number]?.correct_answer }}</ion-button>
-      <ion-button *ngFor="let answer of question[number]?.incorrect_answers" (click)="answerIt(false)">{{ answer }}</ion-button>
-      <ion-button (click)="nextQuestion()" *ngIf="answer">Question suivante</ion-button>
+      <ion-button [ngClass]="{'class1': classText == false, 'class2': classText == true }" (click)="answerIt(true)">{{
+        question[number].correct_answer }}</ion-button>
+      <ion-button [ngClass]="{'class1': classText == false, 'class3': classText == true }"
+        *ngFor="let answer of question[number].incorrect_answers" (click)="answerIt(false)">{{ answer }}</ion-button>
+
     </div>
+  </div>
+  <div *ngIf="answer" class="form-item">
+    <ion-button (click)="nextQuestion()">Question suivante</ion-button>
+  </div>
+  <div *ngIf="rejouer" class="form-item">
+    <ion-button (click)="restartGame()" id="startButton">Rejouer</ion-button>
   </div>
 
 </ion-content>
