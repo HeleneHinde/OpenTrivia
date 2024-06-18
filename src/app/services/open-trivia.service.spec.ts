@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { OpenTriviaServiceService } from './open-trivia-service.service';
+import { OpenTriviaService } from './open-trivia.service';
 
 describe('OpenTriviaServiceService', () => {
-  let service: OpenTriviaServiceService;
+  let service: OpenTriviaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(OpenTriviaServiceService);
+    service = TestBed.inject(OpenTriviaService);
   });
 
   it('should be created', () => {

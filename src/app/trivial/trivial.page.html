@@ -34,14 +34,12 @@
     <p>Jeu démarré avec le pseudonyme: {{ pseudo }} et le niveau de difficulté: {{ selectedDifficulty }}</p>
   </div>
 
-  <div *ngIf="gameStarted">
-    <h2>Quel est la couleur du cheval blanc d'Henry 4</h2>
+  <div *ngIf="question && question.length > 0">
+    <h2>{{ question[number]?.question }}</h2>
     <div class="button-container">
-      <ion-button (click)="answerIt()">Bleu</ion-button>
-      <ion-button (click)="answerIt()">Blanc</ion-button>
-      <ion-button (click)="answerIt()">Rouge</ion-button>
-      <ion-button (click)="answerIt()">NSP</ion-button>
-      <ion-button *ngIf="answer">Question suivante</ion-button>
+      <ion-button (click)="answerIt(true)">{{ question[number]?.correct_answer }}</ion-button>
+      <ion-button *ngFor="let answer of question[number]?.incorrect_answers" (click)="answerIt(false)">{{ answer }}</ion-button>
+      <ion-button (click)="nextQuestion()" *ngIf="answer">Question suivante</ion-button>
     </div>
   </div>
 
