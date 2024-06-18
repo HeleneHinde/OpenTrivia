@@ -1,23 +1,22 @@
+import { Answer } from "./answer";
+
 export class Question {
 
     category: string = "";
     type: string = "";
     difficulty: string = "";
     question: string = "";
-    correct_answer: string = "";
-    incorrect_answers: string[] = [];
+    answers: Answer[]=[];
 
     constructor(category: string,
         type: string,
         difficulty: string,
         question: string,
-        correct_answer: string,
-        incorrect_answers: string[],) {
+        answers: Answer[],) {
         this.category = category;
         this.type = type;
         this.difficulty = difficulty;
         this.question = question;
-        this.correct_answer = correct_answer;
-        this.incorrect_answers = incorrect_answers;
+        this.answers=answers;
     }
 }

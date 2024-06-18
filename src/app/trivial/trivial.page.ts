@@ -5,6 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
 import { IonicModule, ToastController } from '@ionic/angular';
 import { OpenTriviaService } from '../services/open-trivia.service';
 import { Question } from '../models/question';
+import { Answer } from '../models/answer';
 
 @Component({
   selector: 'app-trivial',
@@ -13,19 +14,21 @@ import { Question } from '../models/question';
   standalone: true,
   imports: [FormsModule, CommonModule, IonicModule]
 })
+
 export class TrivialPage implements OnInit {
   pseudo: string = "";
   difficulties: string[] = ['easy', 'medium', 'hard'];
   selectedDifficulty: string = this.difficulties[0];
   saveInfo: boolean = false;
   gameStarted: boolean = false;
-  answer: boolean = false;
+  isAnswer: boolean = false;
+  isNextQuestion: boolean= false;
   isToast: boolean = false;
-  question: Question[] = [];
+  listQuestions: Question[] = [];
+  currentQuestion: Question|undefined;
   number: number = 0;
   rejouer: boolean = false;
   score: number = 0;
-  classText: boolean = false;
 
   constructor(private openTriviaService: OpenTriviaService, private toastCtrl: ToastController) { }
 
@@ -39,7 +42,7 @@ export class TrivialPage implements OnInit {
       this.isToast = false;
   }
 
-  async startGame() {
+  startGame() {
     if (this.pseudo.length >= 3) {
       this.gameStarted = true;
       this.isToast = false;
@@ -49,35 +52,27 @@ export class TrivialPage implements OnInit {
         localStorage.setItem('difficulty', this.selectedDifficulty);
       }
 
-      try {
-        this.question = await this.openTriviaService.getQuestions(this.selectedDifficulty);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des questions :', error);
-        // Gérer l'erreur, par exemple afficher un message à l'utilisateur
-      }
+      this.getListQuestion()
 
     } else {
       this.isToast = true;
     }
   }
 
-  async restartGame() {
-    this.number=0;
-    this.score=0;
-    this.classText=false;
-    this.answer = false;
+  restartGame() {
+    this.number = 0;
+    this.score = 0;
+    this.isAnswer = false;
     this.rejouer = false;
+    this.listQuestions=[];
 
-    try {
-      this.question = await this.openTriviaService.getQuestions(this.selectedDifficulty);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des questions :', error);
-      // Gérer l'erreur, par exemple afficher un message à l'utilisateur
-    }
+    this.getListQuestion()
   }
 
   async answerIt(isCorrect: boolean) {
-    this.classText = true;
+    this.isAnswer = true;
+    this.number++
+    this.isNextQuestion= true;
 
     if (isCorrect) {
       this.score++
@@ -90,9 +85,12 @@ export class TrivialPage implements OnInit {
       (await toast).present();
     }
 
-    if (this.number < (this.question.length - 1)) {
-      this.answer = true;
-    } else {
+console.log(this.number);
+console.log(this.listQuestions.length);
+
+    if (this.number >= (this.listQuestions.length)) {
+      this.isNextQuestion=false;
+
       const toast = this.toastCtrl.create({
         message: "ton score est de " + this.score,
         duration: 3500,
@@ -102,13 +100,34 @@ export class TrivialPage implements OnInit {
 
       this.rejouer = true;
     }
-
-
   }
 
   nextQuestion() {
-    this.number++
-    this.answer = false;
-    this.classText = false;
+    this.isAnswer = false;
+    this.isNextQuestion=false;
+    this.currentQuestion= this.listQuestions[this.number];
+  }
+
+  async getListQuestion() {
+    // Récupèration des données du service
+    const result = await this.openTriviaService.getQuestions(this.selectedDifficulty);
+
+    console.log(result);
+    // On parcourt le tableau de questions obtenu
+    result.results.forEach((question: any) => {
+      // On crée un tableau des réponses possibles pour la question
+      let listAnswers = [];
+      listAnswers.push( new Answer(question.correct_answer, true));
+      question.incorrect_answers.forEach((ans: string) => {
+        listAnswers.push(new Answer(ans));
+      })
+      // On mélange le tableau de réponses
+      listAnswers.sort((a, b) => 0.5 - Math.random());
+      // On ajoute la question au tableau de "Question"
+      this.listQuestions.push(new Question(question.category, question.type, question.difficulty, question.question, listAnswers));
+
+      this.currentQuestion= this.listQuestions[this.number];
+   
+    });
   }
 }
