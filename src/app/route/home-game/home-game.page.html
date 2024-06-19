@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>home-game</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form #triviaForm="ngForm" class="form-container">
+    <div class="form-item">
+      <ion-label for="pseudo">Votre Pseudo :</ion-label>
+      <ion-input type="text" [(ngModel)]="pseudo" name="pseudo" required />
+
+      <ion-toast [isOpen]="isToast" message="Le pseudo doit faire au moins 3 caractères."
+        [duration]="5000"></ion-toast>
+
+    </div>
+    <div class="form-item">
+      <ion-label for="">Difficulté :</ion-label>
+      <ion-select [(ngModel)]="selectedDifficulty" name="difficulty">
+        <ion-select-option *ngFor="let difficulty of difficulties" [value]="difficulty"> {{ difficulty
+          }}</ion-select-option>
+      </ion-select>
+    </div>
+    <div>
+      <ion-checkbox [(ngModel)]="saveInfo" name="saveInfo">Sauvergarder mes informations</ion-checkbox>
+    </div>
+    <div class="form-item">
+      <ion-button (click)="startGame()" [disabled]="triviaForm.invalid" id="startButton">Commencer</ion-button>
+    </div>
+  </form>
+</ion-content>
