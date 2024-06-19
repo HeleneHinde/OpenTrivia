@@ -5,6 +5,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { OpenTriviaService } from '../../services/open-trivia.service';
 import { Question } from '../../models/question';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-trivial',
@@ -40,6 +41,7 @@ export class TrivialPage implements OnInit {
     this.selectedDifficulty = this.activatedRoute.snapshot.params['difficulty'];
     this.listQuestions = await this.openTriviaService.setListQuestion(this.selectedDifficulty)
     this.currentQuestion = this.listQuestions[this.number];
+    await this.loadPreferences();
   }
 
   async answerIt(isCorrect: boolean) {
@@ -66,6 +68,16 @@ export class TrivialPage implements OnInit {
 
     if (this.number >= (this.listQuestions.length)) {
       this.router.navigate(['/score', this.score]);
+    }
+  }
+
+  async loadPreferences() {
+    const { value } = await Preferences.get({ key: 'userPreferences' });
+    if (value) {
+      const preferences = JSON.parse(value);
+      this.pseudo = preferences.pseudo;
+      this.selectedDifficulty = preferences.selectedDifficulty;
+      this.score = preferences.score;
     }
   }
 }
