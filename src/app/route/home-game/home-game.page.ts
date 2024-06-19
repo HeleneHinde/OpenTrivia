@@ -12,7 +12,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [FormsModule, CommonModule, IonicModule, FormsModule, RouterLink]
 })
 export class HomeGamePage implements OnInit {
-  pseudo: string = "";
+  pseudo: string | null = localStorage.getItem('pseudo');
   difficulties: string[] = ['easy', 'medium', 'hard'];
   selectedDifficulty: string = this.difficulties[0];
   saveInfo: boolean = false;
@@ -24,18 +24,20 @@ export class HomeGamePage implements OnInit {
   }
 
   startGame() {
-    if (this.pseudo.length >= 3) {
+    if(this.pseudo){
+      if (this.pseudo.length >= 3) {
 
-      this.isToast = false;
-      // Logique supplémentaire pour sauvegarder les informations si nécessaire
-      if (this.saveInfo) {
-        localStorage.setItem('pseudo', this.pseudo);
-        localStorage.setItem('difficulty', this.selectedDifficulty);
+        this.isToast = false;
+        // Logique supplémentaire pour sauvegarder les informations si nécessaire
+        if (this.saveInfo) {
+          localStorage.setItem('pseudo', this.pseudo);
+          localStorage.setItem('difficulty', this.selectedDifficulty);
+        }
+        this.router.navigate(['/trivial', this.pseudo, this.selectedDifficulty]);
+  
+      } else {
+        this.isToast = true;
       }
-      this.router.navigate(['/trivial', this.pseudo, this.selectedDifficulty]);
-
-    } else {
-      this.isToast = true;
     }
   }
 }
